@@ -1,0 +1,10 @@
+ 
+# Ignore JAR files within the target folder
+/target/*.jar
+
+
+# Ignore specific files
+.classpath
+.factorypath
+.project
+HELP.md
