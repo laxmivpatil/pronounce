@@ -12,7 +12,7 @@
 	<groupId>com.abcm</groupId>
 	<artifactId>JWT-Demo</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+ 
 	<name>JWT-Demo</name>
 	<description>project for dynamic query</description>
 	<properties>
