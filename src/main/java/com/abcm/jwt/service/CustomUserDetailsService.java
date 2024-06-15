@@ -1,5 +1,7 @@
 package com.abcm.jwt.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,14 +25,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UserNotFoundException {
 
-		 
-
-			User user = this.userRepository.findByEmail(username);
-
-			if (user == null)
+		 	Optional<User> user = this.userRepository.findByEmail(username);
+		 	
+			if (user.isEmpty())
 				throw new UserNotFoundException("Could not find user");
 			else
-				return new MyUserDetails(user);
+				return new MyUserDetails(user.get());
 
 		 
 	}

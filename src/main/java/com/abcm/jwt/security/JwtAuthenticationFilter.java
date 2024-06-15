@@ -30,7 +30,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-
+System.out.println(request.getHeader("Authorization"));
 		String requestToken = request.getHeader("Authorization");
 		String username = null;
 		String token = null;
@@ -39,6 +39,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			token = requestToken.substring(7).trim();
 			try {
 				username = jwtTokenHelper.getUsernameFromToken(token);
+				System.out.println(username);
 			} catch (IllegalArgumentException e) {
 				System.out.println("Unable to get JWT token");
 			} catch (ExpiredJwtException e) {

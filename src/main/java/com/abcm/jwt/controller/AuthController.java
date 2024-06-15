@@ -53,6 +53,7 @@ public class AuthController {
 	            this.authenticate(authRequest.getEmail(), authRequest.getPassword());
 
 	            String token = this.jwtTokenHelper.generateToken(userDetails);
+	          //  System.out.println("hghghgh"+userDetails.getUsername());
 
 	            LoginResponse response = new LoginResponse(true,"Login Successful",token);
 	             

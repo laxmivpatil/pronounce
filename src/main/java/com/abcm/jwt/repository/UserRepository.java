@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.abcm.jwt.entity.User;
 
-public interface UserRepository extends JpaRepository<User, Integer> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
 	User findByUsername(String username);
-	User findByEmail(String username);
+	 Optional<User> findByEmail(String email);
 }

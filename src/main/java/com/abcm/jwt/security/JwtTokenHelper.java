@@ -15,12 +15,13 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Component
 public class JwtTokenHelper {
 
-	public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
+	public static final long JWT_TOKEN_VALIDITY = 60*60*60*60 * 60;
 
 	private String secret = "JWTTokenKey";
 
 	// to retrive username from jwt token
 	public String getUsernameFromToken(String token) {
+		
 		return getClaimFromToken(token, Claims::getSubject);
 	}
 

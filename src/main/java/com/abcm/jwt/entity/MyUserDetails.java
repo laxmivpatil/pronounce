@@ -7,10 +7,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class MyUserDetails implements UserDetails {
 
-	private User user;
+	private String username;
+	 private String password;
 
 	public MyUserDetails(User user) {
-		this.user = user;
+		 
+		this.username=user.getEmail();
+		this.password=user.getPassword();
 	}
 
 	@Override
@@ -19,17 +22,7 @@ public class MyUserDetails implements UserDetails {
 		return null;
 	}
 
-	@Override
-	public String getPassword() {
-		// TODO Auto-generated method stub
-		return user.getPassword();
-	}
-
-	@Override
-	public String getUsername() {
-		// TODO Auto-generated method stub
-		return user.getUsername();
-	}
+	 
 
 	@Override
 	public boolean isAccountNonExpired() {
@@ -54,5 +47,24 @@ public class MyUserDetails implements UserDetails {
 		// TODO Auto-generated method stub
 		return true;
 	}
+ 
 
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	@Override
+	public String getPassword() {
+		// TODO Auto-generated method stub
+		return this.password;
+	}
+
+	@Override
+	public String getUsername() {
+		// TODO Auto-generated method stub
+		return this.username;
+	}
+
+	
+	
 }
