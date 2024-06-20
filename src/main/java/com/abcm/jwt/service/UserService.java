@@ -46,7 +46,8 @@ public class UserService {
     private final String uploadDir = "F:\\MyProject\\JWT-Demo\\ProfileImg";
 
     public User save(User user) {
-        if (userRepository.findByEmail(user.getEmail()) != null) {
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+        	System.out.println("dsmbmsbv"+user.getEmail());
             throw new UsernameAlreadyExistsException("Email already exists: " + user.getEmail());
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
