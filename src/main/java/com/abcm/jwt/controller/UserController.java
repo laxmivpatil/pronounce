@@ -55,7 +55,7 @@ public class UserController {
                                                           @RequestParam("education") String education,
                                                           @RequestParam("mobileNo") String mobileNo,
                                                           @RequestParam("nativeLanguage") String nativeLanguage,
-                                                          @RequestPart("profile") MultipartFile profile) {
+                                                          @RequestPart(required=false,value="profile") MultipartFile profile) {
         UserDTO userDTO = new UserDTO();
         userDTO.setUsername(username);
          

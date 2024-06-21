@@ -71,15 +71,12 @@ public class UserService {
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             user.setUsername(userDTO.getUsername());
-          
-          
             user.setBirthDate(userDTO.getBirthDate());
             user.setGender(userDTO.getGender());
             user.setLocation(userDTO.getLocation());
             user.setEducation(userDTO.getEducation());
             user.setMobileNo(userDTO.getMobileNo());
-            user.setNativeLanguage(userDTO.getNativeLanguage());
-            System.out.println("hdskgjhsjhgjhsjghiyiiyyiyiyiyiyi");
+            user.setNativeLanguage(userDTO.getNativeLanguage()); 
 
             MultipartFile profileFile = userDTO.getProfile();
             if (profileFile != null && !profileFile.isEmpty()) {
