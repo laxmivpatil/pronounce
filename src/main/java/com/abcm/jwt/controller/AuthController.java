@@ -1,5 +1,8 @@
 package com.abcm.jwt.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -74,11 +77,21 @@ public class AuthController {
 	    }
 
 	    @PostMapping("signup")
-	    public ResponseEntity<?> registerUser(@RequestBody User user) {
-	       
+	    public ResponseEntity<Map<String, Object>>  registerUser(@RequestBody User user) {
+	    	 Map<String, Object> response = new HashMap<>();
 	            User savedUser = userService.save(user);
-	            return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
-	        
+	            if(savedUser!=null) {
+	            	 response.put("status", true);
+	                 response.put("message", "Registration successfully done");
+	                 response.put("user", savedUser);
+	                
+	            } 
+	            else {
+	            	 response.put("status", false);
+	                 response.put("message", "Registration not done error occurs");
+	                 
+	            }
+	            return ResponseEntity.ok(response);
 	    }
 	     
 	@GetMapping("test")
