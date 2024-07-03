@@ -106,6 +106,13 @@ public class User {
 	public void setAppLanguage(AppLanguage appLanguage) {
 		this.appLanguage = appLanguage;
 	}
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", email=" + email
+				+ ", birthDate=" + birthDate + ", gender=" + gender + ", location=" + location + ", education="
+				+ education + ", mobileNo=" + mobileNo + ", nativeLanguage=" + nativeLanguage + ", profile=" + profile
+				+ ", appLanguage=" + appLanguage + "]";
+	}
 	
 	
 	

@@ -80,7 +80,12 @@ public class UserService {
 
             MultipartFile profileFile = userDTO.getProfile();
             if (profileFile != null && !profileFile.isEmpty()) {
-               //String path=storageService.uploadFileOnAzure(profileFile);
+               String path=storageService.uploadFileOnAzure(profileFile);
+            	//String path="https://satyaprofilestorage.blob.core.windows.net/pronouncestorage/1718437967912_430d1b68-63f2-40af-84ac-f63e7bed4809.jpg?sv=2021-04-10&st=2024-06-15T07%3A47%3A48Z&se=2099-01-01T00%3A00%3A00Z&sr=b&sp=r&sig=Xq9jS5wJJE1hsNXRG1ZkvENm8iqPoC1WUYzxX9iOwuQ%3D";
+                user.setProfile(path);
+            }
+            else
+            {
             	String path="https://satyaprofilestorage.blob.core.windows.net/pronouncestorage/1718437967912_430d1b68-63f2-40af-84ac-f63e7bed4809.jpg?sv=2021-04-10&st=2024-06-15T07%3A47%3A48Z&se=2099-01-01T00%3A00%3A00Z&sr=b&sp=r&sig=Xq9jS5wJJE1hsNXRG1ZkvENm8iqPoC1WUYzxX9iOwuQ%3D";
                 user.setProfile(path);
             }

@@ -71,7 +71,7 @@ public class UserController {
         try {
             User user = userService.getUserFromToken(jwt);
             User updatedUser = userService.updateUser(user.getId(), userDTO);
-
+            System.out.println(updatedUser);
             response.put("status", "success");
             response.put("message", "User updated successfully");
             response.put("user", updatedUser);
