@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.abcm.jwt.JwtDemoApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 23.642 s - in com.abcm.jwt.JwtDemoApplicationTests
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 33.664 s - in com.abcm.jwt.JwtDemoApplicationTests
