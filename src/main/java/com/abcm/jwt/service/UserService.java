@@ -126,4 +126,20 @@ public class UserService {
 
         return response;
     }
+    
+ public Map<String, Object> forgetPassword( String email, String newPassword) {
+        
+        Map<String, Object> response = new HashMap<>();
+        Optional<User> user=userRepository.findByEmail(email);
+       if(user.isEmpty()) {
+    	   response.put("status", true);
+           response.put("message", "Email not exist");
+       }
+            user.get().setPassword(passwordEncoder.encode(newPassword));
+            userRepository.save(user.get());
+            response.put("status", true);
+            response.put("message", "Password changed successfully");
+         
+        return response;
+    }
 }

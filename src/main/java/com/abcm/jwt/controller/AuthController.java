@@ -134,6 +134,19 @@ public class AuthController {
 	            return ResponseEntity.ok(response);
 	    }
 	     
+	    
+	    @PostMapping("/forget-password")
+	    public ResponseEntity<Map<String, Object>> forgetPassword(
+	             
+	            @RequestBody Map<String, Object> request) {
+	    	  
+	        String email= (String) request.get("email");
+	        String newPassword = (String) request.get("newPassword");
+
+	        Map<String, Object> response = userService.forgetPassword(email ,newPassword);
+
+	        return ResponseEntity.ok(response);
+	    }
 	@GetMapping("test")
 	public String test() {
 
