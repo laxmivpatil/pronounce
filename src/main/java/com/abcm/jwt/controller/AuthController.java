@@ -84,7 +84,7 @@ public class AuthController {
 	    } else {
 	        response.put("status", false);
 	        response.put("message", "Invalid or expired OTP.");
-	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+	        return ResponseEntity.status(HttpStatus.OK).body(response);
 	    }
 	}
 	  @PostMapping("login")
