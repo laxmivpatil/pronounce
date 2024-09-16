@@ -20,10 +20,11 @@ public class OtpService {
 
     // Method to generate OTP
     public String generateOtp(String email) {
-        String otp = String.valueOf(new Random().nextInt(9999));  //4 digit OTP
+        String otp = String.format("%04d", new Random().nextInt(10000));  // Generates a 4-digit OTP
         otpStorage.put(email, new OtpEntry(otp, System.currentTimeMillis()));
         return otp;
     }
+
 
     // Method to send OTP (e.g., via SMS)
     public void sendOtp(String otp, String email) {
