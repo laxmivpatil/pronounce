@@ -90,9 +90,10 @@ public class AuthController {
 	  @PostMapping("login")
 	    public ResponseEntity<?> createToken(@RequestBody JwtAuthRequest authRequest) {
 	         
-	            
+	            System.out.println(authRequest.getEmail());
 
 	            UserDetails userDetails = this.userDetailService.loadUserByUsername(authRequest.getEmail());
+	            System.out.println(userDetails.getUsername()+userDetails.getPassword());
 	            this.authenticate(authRequest.getEmail(), authRequest.getPassword());
 
 	            String token = this.jwtTokenHelper.generateToken(userDetails);
@@ -120,9 +121,18 @@ public class AuthController {
 	    public ResponseEntity<Map<String, Object>>  registerUser(@RequestBody User user) {
 	    	 Map<String, Object> response = new HashMap<>();
 	            User savedUser = userService.save(user);
+	            UserDetails userDetails = this.userDetailService.loadUserByUsername(user.getEmail());
+	            
+	             
+	             
+	            
+	           
+
+	            String token = this.jwtTokenHelper.generateToken(userDetails);
 	            if(savedUser!=null) {
 	            	 response.put("status", true);
 	                 response.put("message", "Registration successfully done");
+	                 response.put("token", token);
 	                 response.put("user", savedUser);
 	                
 	            } 
