@@ -25,6 +25,7 @@ import com.abcm.jwt.DTO.OtpRequest;
 import com.abcm.jwt.entity.User;
 import com.abcm.jwt.exception.UserNotFoundException;
 import com.abcm.jwt.exception.UsernameAlreadyExistsException;
+import com.abcm.jwt.repository.UserRepository;
 import com.abcm.jwt.response.LoginResponse;
 import com.abcm.jwt.security.JwtAuthRequest;
 import com.abcm.jwt.security.JwtAuthResponse;
@@ -50,6 +51,9 @@ public class AuthController {
 	
 	@Autowired
 	private AuthenticationManager authenticationManager;
+	
+	@Autowired
+	private UserRepository  userRepository;
 	
 
 	
@@ -88,21 +92,27 @@ public class AuthController {
 	    }
 	}
 	  @PostMapping("login")
-	    public ResponseEntity<?> createToken(@RequestBody JwtAuthRequest authRequest) {
+	    public ResponseEntity< Map<String, Object>> createToken(@RequestBody JwtAuthRequest authRequest) {
 	         
-	            System.out.println(authRequest.getEmail());
+	             
 
 	            UserDetails userDetails = this.userDetailService.loadUserByUsername(authRequest.getEmail());
-	            System.out.println(userDetails.getUsername()+userDetails.getPassword());
+	            
 	            this.authenticate(authRequest.getEmail(), authRequest.getPassword());
 
 	            String token = this.jwtTokenHelper.generateToken(userDetails);
-	          //  System.out.println("hghghgh"+userDetails.getUsername());
-
-	            LoginResponse response = new LoginResponse(true,"Login Successful",token);
-	             
+	           
+	            Map<String, Object> response = new HashMap<>();
+	           
+	           User user= userRepository.findByEmail(authRequest.getEmail()).get();
+	          
+	            response.put("status", true);
+		        response.put("message", "Login Successful");
+		        response.put("username", user.getUsername());
+		        response.put("email", user.getEmail());
+		        response.put("token", token);
+		        return ResponseEntity.ok(response);
 	            
-	            return new ResponseEntity<>(response, HttpStatus.OK);
 	        
 	    }
 
