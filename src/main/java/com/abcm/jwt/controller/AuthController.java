@@ -102,7 +102,7 @@ public class AuthController {
 		 if(user.isEmpty())
 		 {
 		       
-		        response.put("status", true);
+		        response.put("status", false);
 		        response.put("message", "email not registered");
 		        return ResponseEntity.ok(response);
 		 }
@@ -136,7 +136,7 @@ public ResponseEntity<Map<String, Object> > forgetvalidateOtp(@RequestBody OtpRe
 	        response.put("username", user.getUsername());
 	        response.put("email", user.getEmail());
 	        response.put("token", token);
-	        System.out.println(user.getProfile()+"nbnbnb");
+	        response.put("status", true);
         response.put("profile", user.getProfile());
         response.put("message", "OTP is valid.");
         return ResponseEntity.ok(response);
