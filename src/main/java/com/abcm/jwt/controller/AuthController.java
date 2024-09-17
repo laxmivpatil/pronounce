@@ -69,7 +69,7 @@ public class AuthController {
 	        
 	        Map<String, Object> response = new HashMap<>();
 	        response.put("status", true);
-	        response.put("message", "OTP sent to your email: " + email);
+	        response.put("message", "OTP has been sent!");
 	        response.put("otp", otp);
 	        return ResponseEntity.ok(response);
 
@@ -112,9 +112,7 @@ public class AuthController {
 		        response.put("email", user.getEmail());
 		        response.put("token", token);
 		        return ResponseEntity.ok(response);
-	            
-	        
-	    }
+	     }
 
 	    public void authenticate(String username, String password) throws BadCredentialsException,DisabledException {
 	        try {
@@ -132,12 +130,6 @@ public class AuthController {
 	    	 Map<String, Object> response = new HashMap<>();
 	            User savedUser = userService.save(user);
 	            UserDetails userDetails = this.userDetailService.loadUserByUsername(user.getEmail());
-	            
-	             
-	             
-	            
-	           
-
 	            String token = this.jwtTokenHelper.generateToken(userDetails);
 	            if(savedUser!=null) {
 	            	 response.put("status", true);
