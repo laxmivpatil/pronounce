@@ -2,6 +2,7 @@ package com.abcm.jwt.controller;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -91,12 +92,63 @@ public class AuthController {
 	        return ResponseEntity.status(HttpStatus.OK).body(response);
 	    }
 	}
+	
+	
+	
+	@GetMapping("/forget/generateotp")
+    public ResponseEntity< Map<String, Object>> forgetgenerateOtp(@RequestParam String email) {
+		 Map<String, Object> response = new HashMap<>();
+		 Optional<User> user= userRepository.findByEmail(email);
+		 if(user.isEmpty())
+		 {
+		       
+		        response.put("status", true);
+		        response.put("message", "email not registered");
+		        return ResponseEntity.ok(response);
+		 }
+	 
+        String otp = otpService.generateOtp(email);
+         
+        otpService.sendOtp(otp, email);
+        
+        
+       
+        response.put("status", true);
+        response.put("message", "OTP has been sent!");
+        response.put("otp", otp);
+        return ResponseEntity.ok(response);
+
+         
+    }
+
+
+@PostMapping("/forget/validateotp")
+public ResponseEntity<Map<String, Object> > forgetvalidateOtp(@RequestBody OtpRequest otpRequest) {
+    boolean isValid = otpService.validateOtp(otpRequest.getEmail(), otpRequest.getOtp());
+    Map<String, Object> response = new HashMap<>();
+    if (isValid) {
+    	 UserDetails userDetails = this.userDetailService.loadUserByUsername(otpRequest.getEmail());
+         
+     
+
+         String token = this.jwtTokenHelper.generateToken(userDetails);
+         User user= userRepository.findByEmail(otpRequest.getEmail()).get();
+	        response.put("username", user.getUsername());
+	        response.put("email", user.getEmail());
+	        response.put("token", token);
+	        System.out.println(user.getProfile()+"nbnbnb");
+        response.put("profile", user.getProfile());
+        response.put("message", "OTP is valid.");
+        return ResponseEntity.ok(response);
+    } else {
+        response.put("status", false);
+        response.put("message", "Invalid or expired OTP.");
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+}
 	  @PostMapping("login")
 	    public ResponseEntity< Map<String, Object>> createToken(@RequestBody JwtAuthRequest authRequest) {
-	         
-	             
-
-	            UserDetails userDetails = this.userDetailService.loadUserByUsername(authRequest.getEmail());
+		        UserDetails userDetails = this.userDetailService.loadUserByUsername(authRequest.getEmail());
 	            
 	            this.authenticate(authRequest.getEmail(), authRequest.getPassword());
 

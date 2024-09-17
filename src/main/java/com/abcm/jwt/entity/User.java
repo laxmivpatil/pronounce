@@ -20,16 +20,16 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private String username;
+	private String username="";
 	private String password;
-	private String email;
+	private String email="";
 	 private LocalDate birthDate;
-	    private String gender;
-	    private String location;
-	    private String education;
-	    private String mobileNo;
-	    private String nativeLanguage;
-	    private String profile;
+	    private String gender="";
+	    private String location="";
+	    private String education="";
+	    private String mobileNo="";
+	    private String nativeLanguage="";
+	    private String profile="";
 	    
 	    @OneToOne
 	    private AppLanguage appLanguage;
