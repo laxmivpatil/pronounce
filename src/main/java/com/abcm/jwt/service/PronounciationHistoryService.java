@@ -95,6 +95,19 @@ public class PronounciationHistoryService {
      
         return toDto(history1);
     }
+    public PronounciationHistoryResponseDTO updateFavoriteStatus(Long pronounceId, Long userId, boolean status) {
+        // Fetch the pronunciation history using pronounceId and userId
+        PronounciationHistory history = pronounciationHistoryRepository.findByIdAndUserId(pronounceId, userId)
+                .orElseThrow(() -> new RuntimeException("Pronunciation history not found"));
+
+        // Update the status
+        history.setFavorite(status);
+        pronounciationHistoryRepository.save(history);
+
+        // Convert entity to DTO and return
+        return toDto(history);
+    }
+
 
     public List<PronounciationHistoryResponseDTO> getFavoritesByUser(Long userId) {
     	 List<PronounciationHistory> history =pronounciationHistoryRepository.findByUserIdAndFavoriteTrue(userId);

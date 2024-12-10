@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,6 +48,35 @@ public class FavouritePronounciationController {
 	         
 	         
 	    }
+	    
+	    @PostMapping("/update-status")
+	    public ResponseEntity<Map<String, Object>> updateFavoriteStatus(
+	            @RequestBody Map<String, Object> requestBody,
+	            @RequestHeader("Authorization") String token) {
+
+	        // Extract the data from the request body
+	        Long pronounceId = ((Number) requestBody.get("id")).longValue();
+	        Boolean status = (Boolean) requestBody.get("status");
+
+	        // Extract user information from the token
+	        User user = userService.getUserFromToken(token);
+
+	        // Call the service to update the status
+	        PronounciationHistoryResponseDTO updatedHistory = service.updateFavoriteStatus(
+	                pronounceId,
+	                user.getId(),
+	                status
+	        );
+
+	        // Prepare the response
+	        Map<String, Object> response = new HashMap<>();
+	        response.put("status", "success");
+	        response.put("message", "Pronunciation status updated successfully");
+	        response.put("updatedFavorite", updatedHistory);
+
+	        return ResponseEntity.ok(response);
+	    }
+
 
 	    @GetMapping("/get")
 	    public ResponseEntity<  Map<String, Object> > getFavorites(@RequestHeader("Authorization") String token) {
