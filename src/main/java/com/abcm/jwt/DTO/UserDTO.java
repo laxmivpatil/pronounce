@@ -3,7 +3,16 @@
 package com.abcm.jwt.DTO;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.OneToMany;
+
 import org.springframework.web.multipart.MultipartFile;
+
+import com.abcm.jwt.entity.PronounciationHistory;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class UserDTO {
     private String username;
@@ -16,6 +25,11 @@ public class UserDTO {
     private String mobileNo;
     private String nativeLanguage;
     private MultipartFile profile;
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<PronounciationHistory> pronunciationHistories = new ArrayList<>();
+
+    
 	public String getUsername() {
 		return username;
 	}

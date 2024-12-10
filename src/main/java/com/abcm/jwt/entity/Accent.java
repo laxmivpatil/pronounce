@@ -2,6 +2,9 @@ package com.abcm.jwt.entity;
 
  
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -38,7 +41,9 @@ public class Accent {
     private Prompt prompt;
 
     
-    
+    @OneToMany(mappedBy = "accent", cascade = CascadeType.ALL)
+    private List<PronounciationHistory> pronunciationHistories = new ArrayList<>();
+
     
     public String getCountryName() {
 		return countryName;

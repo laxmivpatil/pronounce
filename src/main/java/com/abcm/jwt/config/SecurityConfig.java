@@ -31,9 +31,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-
+		
 		http.csrf().disable().authorizeRequests()
 		.antMatchers("/api/v1/auth/login","/api/v1/auth/signup","/api/v1/auth/*","/api/v1/auth/forget/*").permitAll()
+		.antMatchers("/api/user/pronunciation-history").authenticated()
+		.antMatchers("/api/user/pronunciation-history/**").authenticated()
+		.antMatchers("/api/user/pronunciation/favorite").authenticated()
+		.antMatchers("/api/user/pronunciation/favorite/**").authenticated()
 		.antMatchers("/api/languages").permitAll() 
 		.antMatchers("/api/languages/**").permitAll()
 		.antMatchers("/api/accent/**").permitAll()
