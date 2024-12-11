@@ -35,10 +35,11 @@ public class PronounciationHistoryController {
 	public ResponseEntity<Map<String, Object>> savePronunciationHistory(@RequestHeader("Authorization") String jwt,@RequestBody PronounciationHistoryDTO historyDTO) {
 		
 		User user = userService.getUserFromToken(jwt);
-		pronounciationHistoryService.savePronounciationHistory(user.getId(), historyDTO.getAccentId(),
+		PronounciationHistoryResponseDTO p=pronounciationHistoryService.savePronounciationHistory(user.getId(), historyDTO.getAccentId(),
 	                                      historyDTO.getInputPronounce(), historyDTO.getOutputPronounce());
 		  Map<String, Object> response = new HashMap<>();
 		response.put("status", "success");
+		response.put("history", p);
         response.put("message", "Pronunciation history saved successfully");
          return ResponseEntity.ok(response);
 	     

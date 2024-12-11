@@ -54,7 +54,7 @@ public class PronounciationHistoryService {
     }
 	
 	
-	public void savePronounciationHistory(Long userId, Long accentId, String inputPronounce, String outputPronounce) {
+	public  PronounciationHistoryResponseDTO savePronounciationHistory(Long userId, Long accentId, String inputPronounce, String outputPronounce) {
 	    User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 	    Accent accent = accentRepository.findById(accentId).orElseThrow(() -> new RuntimeException("Accent not found"));
 
@@ -65,7 +65,8 @@ public class PronounciationHistoryService {
 	    history.setOutputPronounce(outputPronounce);
 	    history.setTimestamp(LocalDateTime.now());
 
-	    pronounciationHistoryRepository.save(history);
+	    PronounciationHistory historyUpdated=pronounciationHistoryRepository.save(history);
+	    return toDto(historyUpdated);
 	}
 	
 	
