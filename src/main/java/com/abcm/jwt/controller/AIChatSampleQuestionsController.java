@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.abcm.jwt.DTO.AIChatSampleQuestions;
+import com.abcm.jwt.DTO.QuestionCache;
 import com.abcm.jwt.service.AIChatSampleQuestionsService;
 
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ public class AIChatSampleQuestionsController {
     // Endpoint to get all questions
     @GetMapping
     public ResponseEntity<Map<String, Object>> getAllQuestions() {
-        List<AIChatSampleQuestions> questions = service.getAllQuestions();
+        List<QuestionCache> questions = service.getCachedQuestions();
 
         // Create response as a Map
         Map<String, Object> response = new HashMap<>();

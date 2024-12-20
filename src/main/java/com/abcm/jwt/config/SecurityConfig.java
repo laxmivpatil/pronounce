@@ -39,6 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.antMatchers("/api/user/pronunciation/favorite").authenticated()
 		.antMatchers("/api/user/pronunciation/favorite/**").authenticated()
 		.antMatchers("/api/user/samplequestions/**").authenticated()
+		.antMatchers("/api/user/suggestions/**").authenticated()
 		.antMatchers("/api/languages").permitAll() 
 		.antMatchers("/api/languages/**").permitAll()
 		.antMatchers("/api/accent/**").permitAll()
