@@ -15,5 +15,5 @@ public interface AIChatSampleQuestionsRepository extends JpaRepository<AIChatSam
 	@Query("SELECT s.id AS id, s.question AS question FROM AIChatSampleQuestions s")
 	List<QuestionCache> findAllQuestions();
 
-}
-
+}                                                                                 
+                

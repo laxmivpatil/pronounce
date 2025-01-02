@@ -38,7 +38,7 @@ public class OtpService {
          String emailBody = emailService.generateEmailContent("OtpEmail", variables);
        
          //remove comment after use
-         // emailService.sendEmail(email, "OTP Verification", emailBody);
+          emailService.sendEmail(email, "OTP Verification", emailBody);
          
         System.out.println("OTP " + otp + " sent to " + email);
     }
