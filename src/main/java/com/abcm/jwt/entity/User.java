@@ -1,7 +1,11 @@
 package com.abcm.jwt.entity;
 
 import java.time.LocalDate;
+import java.util.List;
 
+import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -34,6 +38,21 @@ public class User {
 	    @OneToOne
 	    private AppLanguage appLanguage;
 	    
+	    
+	    // List to store exactly three accents in the order of priority (1, 2, 3)
+	    @ElementCollection
+	    @CollectionTable(name = "user_accents", joinColumns = @JoinColumn(name = "user_id"))
+	    @Column(name = "accent_id")
+	    private List<Long> accentIds;
+
+	    // Getter and setter for accentIds
+	    public List<Long> getAccentIds() {
+	        return accentIds;
+	    }
+
+	    public void setAccentIds(List<Long> accentIds) {
+	        this.accentIds = accentIds;
+	    }
 	
 	    public LocalDate getBirthDate() {
 			return birthDate;
