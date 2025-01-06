@@ -182,8 +182,7 @@ public class LanguageController {
 
             // Step 2: Fetch user's priority accents (1, 2, 3)
             List<Long> userAccentIds = user.getAccentIds();  // Assuming this is a list of accent IDs for the user
-
-            // Step 3: Prepare the response list
+             // Step 3: Prepare the response list
             List<Map<String, Object>> responseList = new ArrayList<>();
 
             // Step 4: Iterate over each language and fetch the associated accent details
