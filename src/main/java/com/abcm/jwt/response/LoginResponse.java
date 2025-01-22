@@ -1,14 +1,14 @@
 package com.abcm.jwt.response;
 
 public class LoginResponse {
-	private boolean status;
+	private boolean success;
     private String message;
     private String token;
-	public boolean isStatus() {
-		return status;
+	public boolean isSuccess() {
+		return success;
 	}
-	public void setStatus(boolean status) {
-		this.status = status;
+	public void setSuccess(boolean success) {
+		this.success = success;
 	}
 	public String getMessage() {
 		return message;
@@ -22,9 +22,9 @@ public class LoginResponse {
 	public void setToken(String token) {
 		this.token = token;
 	}
-	public LoginResponse(boolean status, String message, String token) {
+	public LoginResponse(boolean success, String message, String token) {
 		super();
-		this.status = status;
+		this.success = success;
 		this.message = message;
 		this.token = token;
 	}

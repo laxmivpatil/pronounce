@@ -67,22 +67,39 @@ public class LanguageController {
     
     // API endpoint to set priority accents for a user
     @PutMapping("/setPriorityAccents")
-    public ResponseEntity<String> setPriorityAccents(
+    public ResponseEntity<Map<String, Object>> setPriorityAccents(
             @RequestBody  SetPriorityAccentsDTO setPriorityAccentsDTO,@RequestHeader("Authorization") String token) {
 
+    	  Map<String, Object> response = new HashMap<>();
+      
         // Fetch user by ID
         User user = userService.getUserFromToken(token);
        
         // Fetch the accents by their IDs
         List<Long> accentIds = setPriorityAccentsDTO.getAccentIds();
         if (accentIds.size() != 3) {
-            return ResponseEntity.badRequest().body("Exactly 3 accents are required.");
+        	
+        	response.put("status", false);
+
+        	response.put("message", "Exactly 3 accents are required.");
+
+        	 
+            // Step 4: Return the response list as a ResponseEntity
+            return ResponseEntity.ok(response);
+            //return ResponseEntity.badRequest().body("Exactly 3 accents are required.");
         }
 
         // Validate that each accent ID exists
         List<Accent> accents = accentRepository.findAllById(accentIds);
         if (accents.size() != 3) {
-            return ResponseEntity.badRequest().body("One or more accent IDs are invalid.");
+        	response.put("status", false);
+
+        	response.put("message", "One or more accent IDs are invalid.");
+
+        	 
+            // Step 4: Return the response list as a ResponseEntity
+            return ResponseEntity.ok(response);
+            
         }
 
         // Set the accents in the correct priority order
@@ -90,8 +107,14 @@ public class LanguageController {
 
         // Save the updated user
         userService.savetodb(user);
+        response.put("status", true);
 
-        return ResponseEntity.ok("Priority accents updated successfully.");
+    	response.put("message", "Priority accents updated successfully.");
+
+    	 
+        // Step 4: Return the response list as a ResponseEntity
+        return ResponseEntity.ok(response);
+         
     }
     
 
