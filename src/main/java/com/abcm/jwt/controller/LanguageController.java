@@ -28,260 +28,256 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/accent")
 public class LanguageController {
 
-    @Autowired
-    private LanguageService languageService;
-    @Autowired
-    private UserService userService;
+	@Autowired
+	private LanguageService languageService;
+	@Autowired
+	private UserService userService;
 
-    
-    @Autowired 
-    private AccentRepository accentRepository;
-    
+	@Autowired
+	private AccentRepository accentRepository;
 
-    // API to add a language with accents
-    @PostMapping("/add")
-    public ResponseEntity<Object> addLanguageWithAccents(
-            @RequestPart("countryName") String countryName,
-            @RequestPart("languageName") String languageName,
-            @RequestPart("accent") String accent, // Comma-separated list of accent names
-            @RequestPart("flag") MultipartFile flag // Comma-separated list of flag URLs
-    ) {
-        try {
-           
+	// API to add a language with accents
+	@PostMapping("/add")
+	public ResponseEntity<Object> addLanguageWithAccents(@RequestPart("countryName") String countryName,
+			@RequestPart("languageName") String languageName, @RequestPart("accent") String accent, // Comma-separated
+																									// list of accent
+																									// names
+			@RequestPart("flag") MultipartFile flag // Comma-separated list of flag URLs
+	) {
+		try {
 
-            // Assuming that your `Accent` creation logic is handled by the service
-            Accent accents = languageService.addLanguageWithAccents(countryName,languageName, accent, flag);
+			// Assuming that your `Accent` creation logic is handled by the service
+			Accent accents = languageService.addLanguageWithAccents(countryName, languageName, accent, flag);
 
-                       // Save the Accent (with the static Prompt) to the database
-            // languageService.saveAccent(accents);
+			// Save the Accent (with the static Prompt) to the database
+			// languageService.saveAccent(accents);
 
-            // Return the Accent with the static Prompt
-            return ResponseEntity.ok(accents);
+			// Return the Accent with the static Prompt
+			return ResponseEntity.ok(accents);
 
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Failed to add language: " + e.getMessage());
-        }
-    }
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body("Failed to add language: " + e.getMessage());
+		}
+	}
 
-    
-    
-    // API endpoint to set priority accents for a user
-    @PutMapping("/setPriorityAccents")
-    public ResponseEntity<Map<String, Object>> setPriorityAccents(
-            @RequestBody  SetPriorityAccentsDTO setPriorityAccentsDTO,@RequestHeader("Authorization") String token) {
+	// API endpoint to set priority accents for a user
+	@PutMapping("/setPriorityAccents")
+	public ResponseEntity<Map<String, Object>> setPriorityAccents(
+			@RequestBody SetPriorityAccentsDTO setPriorityAccentsDTO, @RequestHeader("Authorization") String token) {
 
-    	  Map<String, Object> response = new HashMap<>();
-      
-        // Fetch user by ID
-        User user = userService.getUserFromToken(token);
-       
-        // Fetch the accents by their IDs
-        List<Long> accentIds = setPriorityAccentsDTO.getAccentIds();
-        if (accentIds.size() != 3) {
-        	
-        	response.put("status", false);
+		Map<String, Object> response = new HashMap<>();
 
-        	response.put("message", "Exactly 3 accents are required.");
+		// Fetch user by ID
+		User user = userService.getUserFromToken(token);
 
-        	 
-            // Step 4: Return the response list as a ResponseEntity
-            return ResponseEntity.ok(response);
-            //return ResponseEntity.badRequest().body("Exactly 3 accents are required.");
-        }
+		// Fetch the accents by their IDs
+		List<Long> accentIds = setPriorityAccentsDTO.getAccentIds();
+		if (accentIds.size() != 3) {
 
-        // Validate that each accent ID exists
-        List<Accent> accents = accentRepository.findAllById(accentIds);
-        if (accents.size() != 3) {
-        	response.put("status", false);
+			response.put("status", false);
 
-        	response.put("message", "One or more accent IDs are invalid.");
+			response.put("message", "Exactly 3 accents are required.");
 
-        	 
-            // Step 4: Return the response list as a ResponseEntity
-            return ResponseEntity.ok(response);
-            
-        }
+			// Step 4: Return the response list as a ResponseEntity
+			return ResponseEntity.ok(response);
+			// return ResponseEntity.badRequest().body("Exactly 3 accents are required.");
+		}
 
-        // Set the accents in the correct priority order
-        user.setAccentIds(accentIds); // Set the accents in priority 1, 2, and 3
+		// Validate that each accent ID exists
+		List<Accent> accents = accentRepository.findAllById(accentIds);
+		if (accents.size() != 3) {
+			response.put("status", false);
 
-        // Save the updated user
-        userService.savetodb(user);
-        response.put("status", true);
+			response.put("message", "One or more accent IDs are invalid.");
 
-    	response.put("message", "Priority accents updated successfully.");
+			// Step 4: Return the response list as a ResponseEntity
+			return ResponseEntity.ok(response);
 
-    	 
-        // Step 4: Return the response list as a ResponseEntity
-        return ResponseEntity.ok(response);
-         
-    }
-    
+		}
 
-    @GetMapping("/getp")
-    public ResponseEntity<Map<String, Object>> getAllLanguagesWithAccentDetailsp(@RequestHeader("Authorization") String token) {
-        try {
-        	
-        	  // Fetch user by ID
-            User user = userService.getUserFromToken(token);
-          
-            // Step 1: Get all languages from the service or repository
-            List<Language> languages = languageService.getAllLanguages();
+		// Set the accents in the correct priority order
+		user.setAccentIds(accentIds); // Set the accents in priority 1, 2, and 3
 
-            // Step 2: Prepare the response list
-            List<Map<String, Object>> responseList = new ArrayList<>();
+		// Save the updated user
+		userService.savetodb(user);
+		response.put("status", true);
 
-            // Step 3: Iterate over each language and fetch the associated accent details
-            for (Language language : languages) {
-                // Step 3.1: Retrieve accent details for each language (assuming a language can have multiple accents)
-                List<Accent> accents = accentRepository.findByLanguage(language);
+		response.put("message", "Priority accents updated successfully.");
 
-                // Step 3.2: Process each accent for the language
-                for (Accent accent : accents) {
-                    // Create the prompt for this specific accent
-                    Map<String, Object> prompt = new HashMap<>();
-                    prompt.put("model", "gpt-4");
-                    prompt.put("temperature", 0.7);
+		// Step 4: Return the response list as a ResponseEntity
+		return ResponseEntity.ok(response);
 
-                    // Create the list of messages
-                    List<Map<String, String>> messages = new ArrayList<>();
+	}
 
-                    Map<String, String> systemMessage = new HashMap<>();
-                    systemMessage.put("role", "system");
-                    systemMessage.put("content", "Your task is to rewrite the provided text in a conversational, phonetic " 
-                            + accent.getAccentName() + " " + accent.getLanguage().getLanguageName() 
-                            + " accent while retaining all original words. Do not drop or add words. Use informal spellings and contractions to mimic casual "
-                            + accent.getAccentName() + " speech.");
+	@GetMapping("/getp")
+	public ResponseEntity<Map<String, Object>> getAllLanguagesWithAccentDetailsp(
+			@RequestHeader("Authorization") String token) {
+		try {
 
-                    Map<String, String> userMessage = new HashMap<>();
-                    userMessage.put("role", "user");
-                    userMessage.put("content", "Rewrite the following text in a " + accent.getAccentName() + " " 
-                            + accent.getLanguage().getLanguageName() + " accent");
+			// Fetch user by ID
+			User user = userService.getUserFromToken(token);
 
-                    messages.add(systemMessage);
-                    messages.add(userMessage);
+			// Step 1: Get all languages from the service or repository
+			List<Language> languages = languageService.getAllLanguages();
 
-                    prompt.put("messages", messages);
+			// Step 2: Prepare the response list
+			List<Map<String, Object>> responseList = new ArrayList<>();
 
-                    // Step 3.3: Construct the response map for this specific language and accent
-                    Map<String, Object> languageWithAccent = new HashMap<>();
-                    languageWithAccent.put("languageName", accent.getLanguage().getLanguageName());
-                    languageWithAccent.put("countryName", accent.getCountryName());
-                    languageWithAccent.put("accentName", accent.getAccentName());
-                    languageWithAccent.put("flag", accent.getFlag());
-                    languageWithAccent.put("code", accent.getCode());
-                    languageWithAccent.put("prompt", prompt);
-                    languageWithAccent.put("accentId", accent.getId());
-                    
-                    // Step 3.4: Add this language and accent to the response list
-                    responseList.add(languageWithAccent);
-                }
-            }
-            Map<String, Object> response = new HashMap<>();
-            response.put("listOfAccents", responseList);
-            // Step 4: Return the response list as a ResponseEntity
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-                // Return an error response if something goes wrong
-                return ResponseEntity.status(500).body(Collections.singletonMap("error", "Failed to fetch languages with accents: " + e.getMessage()));
-            }
-        
-    }
+			// Step 3: Iterate over each language and fetch the associated accent details
+			for (Language language : languages) {
+				// Step 3.1: Retrieve accent details for each language (assuming a language can
+				// have multiple accents)
+				List<Accent> accents = accentRepository.findByLanguage(language);
 
-    
-    @GetMapping("/get")
-    public ResponseEntity<Map<String, Object>> getAllLanguagesWithAccentDetails(@RequestHeader("Authorization") String token) {
-        try {
-            // Fetch user from the token
-            User user = userService.getUserFromToken(token);
-            
-            // Step 1: Get all languages and accents (Fetch all accents in one go)
-            List<Language> languages = languageService.getAllLanguages();
-            List<Accent> allAccents = accentRepository.findAll();  // Get all accents once
-            
-            // Create a map of accentId -> Accent for quick access
-            Map<Long, Accent> accentIdToAccentMap = allAccents.stream()
-                    .collect(Collectors.toMap(Accent::getId, accent -> accent));
+				// Step 3.2: Process each accent for the language
+				for (Accent accent : accents) {
+					// Create the prompt for this specific accent
+					Map<String, Object> prompt = new HashMap<>();
+					prompt.put("model", "gpt-4");
+					prompt.put("temperature", 0.7);
 
-            // Step 2: Fetch user's priority accents (1, 2, 3)
-            List<Long> userAccentIds = user.getAccentIds();  // Assuming this is a list of accent IDs for the user
-             // Step 3: Prepare the response list
-            List<Map<String, Object>> responseList = new ArrayList<>();
+					// Create the list of messages
+					List<Map<String, String>> messages = new ArrayList<>();
 
-            // Step 4: Iterate over each language and fetch the associated accent details
-            for (Language language : languages) {
-                // Step 4.1: Retrieve all accents for the current language (instead of querying each time)
-                List<Accent> accentsForLanguage = allAccents.stream()
-                        .filter(acc -> acc.getLanguage().equals(language))
-                        .collect(Collectors.toList());
+					Map<String, String> systemMessage = new HashMap<>();
+					systemMessage.put("role", "system");
+					systemMessage.put("content",
+							"Your task is to rewrite the provided text in a conversational, phonetic "
+									+ accent.getAccentName() + " " + accent.getLanguage().getLanguageName()
+									+ " accent while retaining all original words. Do not drop or add words. Use informal spellings and contractions to mimic casual "
+									+ accent.getAccentName() + " speech.");
 
-                // Step 4.2: Process priority accents (1, 2, 3)
-                for (int i = 0; i < userAccentIds.size() && i < 3; i++) {
-                    Long accentId = userAccentIds.get(i);
+					Map<String, String> userMessage = new HashMap<>();
+					userMessage.put("role", "user");
+					userMessage.put("content", "Rewrite the following text in a " + accent.getAccentName() + " "
+							+ accent.getLanguage().getLanguageName() + " accent");
 
-                    Accent priorityAccent = accentIdToAccentMap.get(accentId);
-                    if (priorityAccent != null && accentsForLanguage.contains(priorityAccent)) {
-                        Map<String, Object> accentDetails = prepareAccentResponse(priorityAccent, i + 1);
-                        responseList.add(accentDetails);
-                    }
-                }
+					messages.add(systemMessage);
+					messages.add(userMessage);
 
-                // Step 4.3: Process the remaining accents (those that are not assigned as priority)
-                for (Accent accent : accentsForLanguage) {
-                    if (!userAccentIds.contains(accent.getId())) {
-                        Map<String, Object> accentDetails = prepareAccentResponse(accent, 0);  // For non-priority
-                        responseList.add(accentDetails);
-                    }
-                }
-            }
+					prompt.put("messages", messages);
 
-            // Step 5: Return the response list as a ResponseEntity
-            Map<String, Object> response = new HashMap<>();
-            response.put("listOfAccents", responseList);
+					// Step 3.3: Construct the response map for this specific language and accent
+					Map<String, Object> languageWithAccent = new HashMap<>();
+					languageWithAccent.put("languageName", accent.getLanguage().getLanguageName());
+					languageWithAccent.put("countryName", accent.getCountryName());
+					languageWithAccent.put("accentName", accent.getAccentName());
+					languageWithAccent.put("flag", accent.getFlag());
+					languageWithAccent.put("code", accent.getCode());
+					languageWithAccent.put("prompt", prompt);
+					languageWithAccent.put("accentId", accent.getId());
 
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            // Return an error response if something goes wrong
-            return ResponseEntity.status(500).body(Collections.singletonMap("error", "Failed to fetch languages with accents: " + e.getMessage()));
-        }
-    }
+					// Step 3.4: Add this language and accent to the response list
+					responseList.add(languageWithAccent);
+				}
+			}
+			Map<String, Object> response = new HashMap<>();
+			response.put("listOfAccents", responseList);
+			// Step 4: Return the response list as a ResponseEntity
+			return ResponseEntity.ok(response);
+		} catch (Exception e) {
+			// Return an error response if something goes wrong
+			return ResponseEntity.status(500).body(
+					Collections.singletonMap("error", "Failed to fetch languages with accents: " + e.getMessage()));
+		}
 
-    // Helper method to prepare accent response
-    private Map<String, Object> prepareAccentResponse(Accent accent, int priority) {
-        Map<String, Object> prompt = new HashMap<>();
-        prompt.put("model", "gpt-4");
-        prompt.put("temperature", 0.7);
+	}
 
-        List<Map<String, String>> messages = new ArrayList<>();
-        Map<String, String> systemMessage = new HashMap<>();
-        systemMessage.put("role", "system");
-        systemMessage.put("content", "Your task is to rewrite the provided text in a conversational, phonetic " 
-            + accent.getAccentName() + " " + accent.getLanguage().getLanguageName() 
-            + " accent while retaining all original words. Do not drop or add words. Use informal spellings and contractions to mimic casual "
-            + accent.getAccentName() + " speech.");
+	@GetMapping("/get")
+	public ResponseEntity<Map<String, Object>> getAllLanguagesWithAccentDetails(
+			@RequestHeader("Authorization") String token) {
+		try {
+			// Fetch user from the token
+			User user = userService.getUserFromToken(token);
 
-        Map<String, String> userMessage = new HashMap<>();
-        userMessage.put("role", "user");
-        userMessage.put("content", "Rewrite the following text in a " + accent.getAccentName() + " " 
-            + accent.getLanguage().getLanguageName() + " accent");
+			// Step 1: Get all languages and accents (Fetch all accents in one go)
+			List<Language> languages = languageService.getAllLanguages();
+			List<Accent> allAccents = accentRepository.findAll(); // Get all accents once
 
-        messages.add(systemMessage);
-        messages.add(userMessage);
-        prompt.put("messages", messages);
+			// Create a map of accentId -> Accent for quick access
+			Map<Long, Accent> accentIdToAccentMap = allAccents.stream()
+					.collect(Collectors.toMap(Accent::getId, accent -> accent));
 
-        // Create and return the response map
-        Map<String, Object> accentDetails = new HashMap<>();
-        accentDetails.put("languageName", accent.getLanguage().getLanguageName());
-        accentDetails.put("countryName", accent.getCountryName());
-        accentDetails.put("accentName", accent.getAccentName());
-        accentDetails.put("flag", accent.getFlag());
-        accentDetails.put("code", accent.getCode());
-        accentDetails.put("prompt", prompt);
-        accentDetails.put("accentId", accent.getId());
-        accentDetails.put("priority", priority);
+			// Step 2: Fetch user's priority accents (1, 2, 3)
+			List<Long> userAccentIds = user.getAccentIds(); // Assuming this is a list of accent IDs for the user
+			// Step 3: Prepare the response list
+			List<Map<String, Object>> responseList = new ArrayList<>();
 
-        return accentDetails;
-    }
+			// Step 4: Iterate over each language and fetch the associated accent details
+			for (Language language : languages) {
+				// Step 4.1: Retrieve all accents for the current language (instead of querying
+				// each time)
+				List<Accent> accentsForLanguage = allAccents.stream().filter(acc -> acc.getLanguage().equals(language))
+						.collect(Collectors.toList());
 
+				// Step 4.2: Process priority accents (1, 2, 3)
+				for (int i = 0; i < userAccentIds.size() && i < 3; i++) {
+					Long accentId = userAccentIds.get(i);
+
+					Accent priorityAccent = accentIdToAccentMap.get(accentId);
+					if (priorityAccent != null && accentsForLanguage.contains(priorityAccent)) {
+						Map<String, Object> accentDetails = prepareAccentResponse(priorityAccent, i + 1);
+						responseList.add(accentDetails);
+					}
+				}
+
+				// Step 4.3: Process the remaining accents (those that are not assigned as
+				// priority)
+				for (Accent accent : accentsForLanguage) {
+					if (!userAccentIds.contains(accent.getId())) {
+						Map<String, Object> accentDetails = prepareAccentResponse(accent, 0); // For non-priority
+						responseList.add(accentDetails);
+					}
+				}
+			}
+
+			// Step 5: Return the response list as a ResponseEntity
+			Map<String, Object> response = new HashMap<>();
+			response.put("listOfAccents", responseList);
+
+			return ResponseEntity.ok(response);
+		} catch (Exception e) {
+			// Return an error response if something goes wrong
+			return ResponseEntity.status(500).body(
+					Collections.singletonMap("error", "Failed to fetch languages with accents: " + e.getMessage()));
+		}
+	}
+
+	// Helper method to prepare accent response
+	private Map<String, Object> prepareAccentResponse(Accent accent, int priority) {
+		Map<String, Object> prompt = new HashMap<>();
+		prompt.put("model", "gpt-4");
+		prompt.put("temperature", 0.7);
+
+		List<Map<String, String>> messages = new ArrayList<>();
+		Map<String, String> systemMessage = new HashMap<>();
+		systemMessage.put("role", "system");
+		systemMessage.put("content", "Your task is to rewrite the provided text in a conversational, phonetic "
+				+ accent.getAccentName() + " " + accent.getLanguage().getLanguageName()
+				+ " accent while retaining all original words. Do not drop or add words. Use informal spellings and contractions to mimic casual "
+				+ accent.getAccentName() + " speech.");
+
+		Map<String, String> userMessage = new HashMap<>();
+		userMessage.put("role", "user");
+		userMessage.put("content", "Rewrite the following text in a " + accent.getAccentName() + " "
+				+ accent.getLanguage().getLanguageName() + " accent");
+
+		messages.add(systemMessage);
+		messages.add(userMessage);
+		prompt.put("messages", messages);
+
+		// Create and return the response map
+		Map<String, Object> accentDetails = new HashMap<>();
+		accentDetails.put("languageName", accent.getLanguage().getLanguageName());
+		accentDetails.put("countryName", accent.getCountryName());
+		accentDetails.put("accentName", accent.getAccentName());
+		accentDetails.put("flag", accent.getFlag());
+		accentDetails.put("code", accent.getCode());
+		accentDetails.put("prompt", prompt);
+		accentDetails.put("accentId", accent.getId());
+		accentDetails.put("priority", priority);
+
+		return accentDetails;
+	}
 
 }
