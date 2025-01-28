@@ -24,6 +24,8 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	 @Enumerated(EnumType.STRING)
+	    private AuthProvider authProvider; // GOOGLE or LOCAL
 	private String username="";
 	private String password;
 	private String email="";
@@ -133,6 +135,14 @@ public class User {
 				+ ", birthDate=" + birthDate + ", gender=" + gender + ", location=" + location + ", education="
 				+ education + ", mobileNo=" + mobileNo + ", nativeLanguage=" + nativeLanguage + ", profile=" + profile
 				+ ", appLanguage=" + appLanguage + "]";
+	}
+
+	public AuthProvider getAuthProvider() {
+		return authProvider;
+	}
+
+	public void setAuthProvider(AuthProvider authProvider) {
+		this.authProvider = authProvider;
 	}
 	
 	
