@@ -6,8 +6,7 @@ public class AuthRequest {
     private String email;
     private String password;
     private String authProvider; // "GOOGLE" or "LOCAL"
-    private String profile; // Optional for Google users
-
+   
     public AuthRequest() {}
 
 	public String getUsername() {
@@ -42,13 +41,7 @@ public class AuthRequest {
 		this.authProvider = authProvider;
 	}
 
-	public String getProfile() {
-		return profile;
-	}
-
-	public void setProfile(String profile) {
-		this.profile = profile;
-	}
+	 
     
     
     

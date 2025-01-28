@@ -343,7 +343,7 @@ public ResponseEntity<Map<String, Object>> authenticateOrRegister(@RequestBody A
     if (existingUser.isPresent()) {
         user = existingUser.get();
 
-        // 🟢 If user is Google registered, login without password
+        //  If user is Google registered, login without password
         if (user.getAuthProvider() == AuthProvider.GOOGLE) {
             UserDetails userDetails = this.userDetailService.loadUserByUsername(user.getEmail());
             String token = this.jwtTokenHelper.generateToken(userDetails);
@@ -355,7 +355,7 @@ public ResponseEntity<Map<String, Object>> authenticateOrRegister(@RequestBody A
             response.put("token", token);
             return ResponseEntity.ok(response);
         }
-        // 🟢 If user is facebook registered, login without password
+        //  If user is facebook registered, login without password
         if (user.getAuthProvider() == AuthProvider.FACEBOOK) {
             UserDetails userDetails = this.userDetailService.loadUserByUsername(user.getEmail());
             String token = this.jwtTokenHelper.generateToken(userDetails);
@@ -390,8 +390,7 @@ public ResponseEntity<Map<String, Object>> authenticateOrRegister(@RequestBody A
         user = new User();
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
-        user.setProfile(request.getProfile());
-
+        
         if (request.getAuthProvider().equalsIgnoreCase("GOOGLE")) {
             user.setAuthProvider(AuthProvider.GOOGLE);
             user.setPassword(null);
