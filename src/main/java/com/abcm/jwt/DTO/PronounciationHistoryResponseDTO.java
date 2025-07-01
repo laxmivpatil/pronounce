@@ -18,6 +18,10 @@ public class PronounciationHistoryResponseDTO {
         private String accentName;
         private String languageName;
         private String flag;
+        private String code;
+        private String maleVoice;
+        private String femaleVoice;
+        
         
         
         
@@ -31,6 +35,36 @@ public class PronounciationHistoryResponseDTO {
         }
 
        
+		public String getCode() {
+			return code;
+		}
+
+
+		public void setCode(String code) {
+			this.code = code;
+		}
+
+
+		public String getMaleVoice() {
+			return maleVoice;
+		}
+
+
+		public void setMaleVoice(String maleVoice) {
+			this.maleVoice = maleVoice;
+		}
+
+
+		public String getFemaleVoice() {
+			return femaleVoice;
+		}
+
+
+		public void setFemaleVoice(String femaleVoice) {
+			this.femaleVoice = femaleVoice;
+		}
+
+
 		public String getLanguageName() {
 			return languageName;
 		}

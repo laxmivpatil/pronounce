@@ -48,6 +48,9 @@ public class PronounciationHistoryService {
         accentDTO.setAccentName(history.getAccent().getAccentName());
         accentDTO.setFlag(history.getAccent().getFlag());
         accentDTO.setLanguageName(history.getAccent().getLanguage().getLanguageName());
+        accentDTO.setCode(history.getAccent().getCode());
+        accentDTO.setFemaleVoice(history.getAccent().getFemaleVoice());
+        accentDTO.setMaleVoice(history.getAccent().getMaleVoice());
         dto.setAccent(accentDTO);
 
         return dto;
