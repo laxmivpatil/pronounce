@@ -414,7 +414,7 @@ public ResponseEntity<Map<String, Object>> authenticateOrRegister(@RequestBody A
         response.put("username", user.getUsername());
         response.put("email", user.getEmail());
         response.put("token", token);
-
+        
         return ResponseEntity.ok(response);
     }
 }

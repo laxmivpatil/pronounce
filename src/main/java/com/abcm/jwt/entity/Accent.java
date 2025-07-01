@@ -39,6 +39,10 @@ public class Accent {
     @OneToOne(cascade = CascadeType.ALL)  // Add CascadeType.ALL to ensure prompt is saved along with accent
     @JoinColumn(name = "prompt_id")
     private Prompt prompt;
+    
+    private String maleVoice="";
+    private String femaleVoice="";
+    
 
     
     @OneToMany(mappedBy = "accent", cascade = CascadeType.ALL)
@@ -101,5 +105,32 @@ public class Accent {
 	public void setPrompt(Prompt prompt) {
 		this.prompt = prompt;
 	}
+
+	public String getMaleVoice() {
+		return maleVoice;
+	}
+
+	public void setMaleVoice(String maleVoice) {
+		this.maleVoice = maleVoice;
+	}
+
+	public List<PronounciationHistory> getPronunciationHistories() {
+		return pronunciationHistories;
+	}
+
+	public void setPronunciationHistories(List<PronounciationHistory> pronunciationHistories) {
+		this.pronunciationHistories = pronunciationHistories;
+	}
+
+	public String getFemaleVoice() {
+		return femaleVoice;
+	}
+
+	public void setFemaleVoice(String femaleVoice) {
+		this.femaleVoice = femaleVoice;
+	}
+
+	 
+	 
     
 }

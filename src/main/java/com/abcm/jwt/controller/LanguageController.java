@@ -245,7 +245,7 @@ public class LanguageController {
 
 	// Helper method to prepare accent response
 	private Map<String, Object> prepareAccentResponse(Accent accent, int priority) {
-		Map<String, Object> prompt = new HashMap<>();
+	/*	Map<String, Object> prompt = new HashMap<>();
 		prompt.put("model", "gpt-4");
 		prompt.put("temperature", 0.7);
 
@@ -265,19 +265,50 @@ public class LanguageController {
 		messages.add(systemMessage);
 		messages.add(userMessage);
 		prompt.put("messages", messages);
+		
+		*/
 
 		// Create and return the response map
 		Map<String, Object> accentDetails = new HashMap<>();
-		accentDetails.put("languageName", accent.getLanguage().getLanguageName());
+	 	accentDetails.put("languageName", accent.getLanguage().getLanguageName());
 		accentDetails.put("countryName", accent.getCountryName());
 		accentDetails.put("accentName", accent.getAccentName());
 		accentDetails.put("flag", accent.getFlag());
+
 		accentDetails.put("code", accent.getCode());
-		accentDetails.put("prompt", prompt);
+		accentDetails.put("maleVoice", accent.getMaleVoice());
+		accentDetails.put("femaleVoice", accent.getFemaleVoice());
+		//accentDetails.put("prompt", prompt);
 		accentDetails.put("accentId", accent.getId());
 		accentDetails.put("priority", priority);
-
+ 
+accentDetails.put("code", accent.getCode());
 		return accentDetails;
 	}
+	
+	
+	  @PutMapping("/{id}/update-gender-voice")
+	    public ResponseEntity<?> updateGenderAndVoice(
+	            @PathVariable Long id,
+	            @RequestBody Map<String, String> request) {
+	        try {
+	            Accent accent = accentRepository.findById(id)
+	                    .orElseThrow(() -> new RuntimeException("Accent not found"));
+
+	            // Extract fields from JSON body
+	            String malevoice = request.get("malevoice");
+	            String femalevoice = request.get("femalevoice");
+
+	          
+	            accent.setMaleVoice(malevoice);
+	            accent.setFemaleVoice(femalevoice);
+
+	            accentRepository.save(accent);
+
+	            return ResponseEntity.ok(accent);
+	        } catch (Exception e) {
+	            return ResponseEntity.status(500).body(e.getMessage());
+	        }
+	    }
 
 }
