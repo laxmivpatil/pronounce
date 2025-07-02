@@ -347,7 +347,12 @@ public ResponseEntity<Map<String, Object>> authenticateOrRegister(@RequestBody A
          response.put("status", false);        
          return ResponseEntity.ok(response);	
     }
-    
+    else if (existingUser.isPresent() && !request.isLogin()) {
+    	System.out.println("allready registered user please login");
+    	 response.put("message", "email allready registered please login");
+         response.put("status", false);        
+         return ResponseEntity.ok(response);	
+    }
     else if (existingUser.isPresent() && request.isLogin()) {
         user = existingUser.get();
 
