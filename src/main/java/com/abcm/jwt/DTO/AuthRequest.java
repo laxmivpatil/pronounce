@@ -6,10 +6,20 @@ public class AuthRequest {
     private String email;
     private String password;
     private String authProvider; // "GOOGLE" or "LOCAL"
+    private boolean login;
    
-    public AuthRequest() {}
-
-	public String getUsername() {
+    
+    
+    
+    
+    
+	public boolean isLogin() {
+		return login;
+	}
+	public void setLogin(boolean login) {
+		this.login = login;
+	}
+	public AuthRequest() {}	public String getUsername() {
 		return username;
 	}
 

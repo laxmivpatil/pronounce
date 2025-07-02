@@ -337,10 +337,18 @@ public void authenticate1(String username, String password) throws BadCredential
 public ResponseEntity<Map<String, Object>> authenticateOrRegister(@RequestBody AuthRequest request) {
     Map<String, Object> response = new HashMap<>();
 
+    
     Optional<User> existingUser = userRepository.findByEmail(request.getEmail());
+    System.out.println(existingUser.toString()+ existingUser.isEmpty() + request.toString());
     User user;
-
-    if (existingUser.isPresent()) {
+    if (existingUser.isEmpty() && request.isLogin()) {
+    	System.out.println("not registered user");
+    	 response.put("message", "email not registered please registered first");
+         response.put("status", false);        
+         return ResponseEntity.ok(response);	
+    }
+    
+    else if (existingUser.isPresent() && request.isLogin()) {
         user = existingUser.get();
 
         //  If user is Google registered, login without password
@@ -411,12 +419,13 @@ public ResponseEntity<Map<String, Object>> authenticateOrRegister(@RequestBody A
 
         response.put("status", true);
         response.put("message", "User registered successfully");
-        response.put("username", user.getUsername());
+        //response.put("username", user.getUsername());
         response.put("email", user.getEmail());
         response.put("token", token);
         
         return ResponseEntity.ok(response);
     }
+    
 }
 
 public void authenticate(String email, String password) throws BadCredentialsException, DisabledException {
