@@ -130,6 +130,13 @@ public class Accent {
 		this.femaleVoice = femaleVoice;
 	}
 
+	@Override
+	public String toString() {
+		return "Accent [id=" + id + ", countryName=" + countryName + ", accentName=" + accentName + ", flag=" + flag
+				+ ", code=" + code + ", language=" + language + ", prompt=" + prompt + ", maleVoice=" + maleVoice
+				+ ", femaleVoice=" + femaleVoice + ", pronunciationHistories=" + pronunciationHistories + "]";
+	}
+
 	 
 	 
     

@@ -63,6 +63,12 @@ public class AuthController {
 	private UserRepository  userRepository;
 	
 
+	@GetMapping("/")
+    public String printHello() {
+		return "Hello";
+	}
+	
+	
 	
 	
 	
